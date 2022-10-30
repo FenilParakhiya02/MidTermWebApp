@@ -1,6 +1,8 @@
 /*
+books.js
 Fenil Parakhiya 
 301240778
+Favourite Book List web app
 */
 
 // modules required for routing
@@ -19,9 +21,9 @@ router.get('/', (req, res, next) => {
       return console.error(err);
     }
     else {
-      res.render('books/index', {
+        res.render('books/index', {
         title: 'Books',
-        books: books
+        books: books  
       });
     }
   });
@@ -34,7 +36,12 @@ router.get('/add', (req, res, next) => {
     /*****************
      * ADD CODE HERE *
      *****************/
-     res.render('books/details', { title: 'Add Book', books: book() })
+
+    res.render('books/details', { 
+    title: 'Add a book', 
+    books: book() 
+
+    })
 
 });
 
@@ -44,22 +51,24 @@ router.post('/add', (req, res, next) => {
     /*****************
      * ADD CODE HERE *
      *****************/
-     const newBook = book({
-      Title: req.body.title,
-      Price: req.body.price,
-      Author: req.body.author,
-      Genre: req.body.genre
-      });
+    const newBook = book({
+    Title: req.body.title,
+    Price: req.body.price,
+    Author: req.body.author,
+    Genre: req.body.genre
+    });
 
-      book.create(newBook, (err, Book) => {
-        if(err) {
-            console.log(err);
-            res.end(err);
-        }
-        else {
-            res.redirect('/books');
-        }
-      });
+    book.create(newBook, (err, Book) => {
+      if(!err) {
+
+        res.redirect('/books');
+            
+      }
+      else {
+        console.log(err);
+        res.end(err);
+      }
+    });
 });
 
 // GET the Book Details page in order to edit an existing Book
@@ -70,13 +79,19 @@ router.get('/:id', (req, res, next) => {
      * ADD CODE HERE *
      *****************/
      
-     book.findById(id, (err, bookToEdit) => {
-         if (err) {
-             console.log(err);
-             res.end(err);
+     book.findById(id, (err, editBook) => {
+         if (!err) {
+            res.render('books/details', { 
+            title: 'Edit a book', 
+            books: editBook 
+          });
+
          }
          else{
-             res.render('books/details', { title: 'Edit Book', books: bookToEdit });
+   
+          console.log(err);
+          res.end(err);             
+           
          }
      });
     
@@ -89,7 +104,7 @@ router.post('/:id', (req, res, next) => {
      * ADD CODE HERE *
      *****************/
      const id = req.params.id;
-     const updatedBook = book({
+     const updateBook = book({
         _id: id,
         Title: req.body.title,
         Price: req.body.price,
@@ -97,13 +112,17 @@ router.post('/:id', (req, res, next) => {
         Genre: req.body.genre
       });
 
-    book.updateOne({_id: id}, updatedBook, err => {
-        if(err) {
-            console.log(err);
-            res.end(err);
+    book.updateOne({_id: id}, updateBook, err => {
+        if(!err) {
+
+          res.redirect('/books');
+
         }
         else {
-            res.redirect('/books');
+            
+          console.log(err);
+            res.end(err); 
+
         }
     });
 
@@ -118,12 +137,16 @@ router.get('/delete/:id', (req, res, next) => {
 
      const id = req.params.id;
      book.remove({_id: id}, err => {
-      if(err) {
-          console.log(err);
-          res.end(err);
+      if(!err) {
+
+        res.redirect('/books');
+
       }
       else {
-          res.redirect('/books');
+
+        console.log(err);
+        res.end(err);
+
       }
    });
 });
